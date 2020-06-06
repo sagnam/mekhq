@@ -33,7 +33,7 @@ ext {
     hqBranchTag = hqBranch.equals('master')? '' : '-' + hqBranch
     
     // Allows setting a dependency on a different MM branch.
-    mmBranch = '0.46.1-Incline_Cliff'
+    mmBranch = '0.46.1-RPG-stats'
     mmBranchTag = mmBranch.equals('master')? '' : '-' + mmBranch
     mmlBranch = '0.46.1-Incline_Cliff'
     mmlBranchTag = mmlBranch.equals('master')? '' : '-' + mmlBranch

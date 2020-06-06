@@ -33,6 +33,7 @@ import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 
 import megamek.common.logging.LogLevel;
+import megamek.common.options.OptionsConstants;
 import mekhq.MekHQ;
 import mekhq.MekHqXmlUtil;
 import mekhq.campaign.Campaign;
@@ -80,7 +81,7 @@ public class ForceStub implements Serializable {
         for(UUID uid : force.getUnits()) {
             Unit u = c.getUnit(uid);
             if(null != u) {
-                units.add(new UnitStub(u));
+                units.add(new UnitStub(u, c.getGameOptions().booleanOption(OptionsConstants.RPG_RPG_GUNNERY)));
             }
         }
     }

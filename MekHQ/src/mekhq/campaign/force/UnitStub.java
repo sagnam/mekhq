@@ -25,6 +25,7 @@ import java.io.PrintWriter;
 import java.io.Serializable;
 
 import megamek.common.Crew;
+import megamek.common.util.generator.CrewSkillSummaryUtil;
 import mekhq.MekHQ;
 import mekhq.MekHqXmlUtil;
 import mekhq.campaign.personnel.Person;
@@ -47,10 +48,10 @@ public class UnitStub implements Serializable {
         desc = "";
     }
     
-    public UnitStub(Unit u) {
+    public UnitStub(Unit u, boolean rpgGunnery) {
         portraitCategory = Crew.ROOT_PORTRAIT;
         portraitFileName = Crew.PORTRAIT_NONE;
-        desc = getUnitDescription(u);
+        desc = getUnitDescription(u, rpgGunnery);
         Person commander = u.getCommander();
         if(null != commander) {
             portraitCategory = commander.getPortraitCategory();
@@ -70,13 +71,13 @@ public class UnitStub implements Serializable {
         return portraitFileName;
     }
     
-    private String getUnitDescription(Unit u) {
+    private String getUnitDescription(Unit u, boolean rpgGunnery) {
         String name = "<font color='red'>No Crew</font>";
         String uname = "";
         Person pp = u.getCommander();
         if(null != pp) {
             name = pp.getFullTitle();
-            name += " (" + u.getEntity().getCrew().getGunnery() + "/" + u.getEntity().getCrew().getPiloting() + ")";
+            name += " (" + CrewSkillSummaryUtil.getPilotSkillSummary(u.getEntity().getCrew(), rpgGunnery) + ")";
             if(pp.needsFixing()) {
                 name = "<font color='red'>" + name + "</font>";
             }     

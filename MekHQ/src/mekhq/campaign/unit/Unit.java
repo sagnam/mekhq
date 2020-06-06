@@ -28,6 +28,7 @@ import java.util.*;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
+import megamek.common.util.generator.CrewSkillSummaryUtil;
 import mekhq.campaign.finances.Money;
 import mekhq.campaign.log.ServiceLogger;
 import org.w3c.dom.NamedNodeMap;
@@ -778,8 +779,7 @@ public class Unit implements MekHqXmlSerializable, ITechnology {
     public String getPilotDesc() {
         if (hasPilot()) {
             return entity.getCrew().getName() + " "
-                    + entity.getCrew().getGunnery() + "/"
-                    + entity.getCrew().getPiloting();
+                    + CrewSkillSummaryUtil.getPilotSkillSummary(entity.getCrew(), getCampaign().getGameOptions().booleanOption(OptionsConstants.RPG_RPG_GUNNERY));
         }
         return "NO PILOT";
     }
@@ -3162,16 +3162,16 @@ public class Unit implements MekHqXmlSerializable, ITechnology {
                     sumGunnery += p.getSkill(gunType).getFinalSkillValue();
                     hasGunnery = true;
                 }
-                if (p.hasSkill(gunType + "/Laser")) {
-                    sumGunneryL += p.getSkill(gunType + "/Laser").getFinalSkillValue();
+                if (SkillType.S_GUN_MECH.equals(gunType) && p.hasSkill(SkillType.S_GUN_MECH_L)) {
+                    sumGunneryL += p.getSkill(SkillType.S_GUN_MECH_L).getFinalSkillValue();
                     hasGunnery = true;
                 }
-                if (p.hasSkill(gunType + "/Ballistic")) {
-                    sumGunneryB += p.getSkill(gunType + "/Ballistic").getFinalSkillValue();
+                if (SkillType.S_GUN_MECH.equals(gunType) && p.hasSkill(SkillType.S_GUN_MECH_B)) {
+                    sumGunneryB += p.getSkill(SkillType.S_GUN_MECH_B).getFinalSkillValue();
                     hasGunnery = true;
                 }
-                if (p.hasSkill(gunType + "/Missile")) {
-                    sumGunneryM += p.getSkill(gunType + "/Missile").getFinalSkillValue();
+                if (SkillType.S_GUN_MECH.equals(gunType) && p.hasSkill(SkillType.S_GUN_MECH_M)) {
+                    sumGunneryM += p.getSkill(SkillType.S_GUN_MECH_M).getFinalSkillValue();
                     hasGunnery = true;
                 }
 
@@ -3194,16 +3194,16 @@ public class Unit implements MekHqXmlSerializable, ITechnology {
                 sumGunnery += p.getSkill(gunType).getFinalSkillValue();
                 hasGunnery = true;
             }
-            if (p.hasSkill(gunType + "/Laser")) {
-                sumGunneryL += p.getSkill(gunType + "/Laser").getFinalSkillValue();
+            if (SkillType.S_GUN_MECH.equals(gunType) && p.hasSkill(SkillType.S_GUN_MECH_L)) {
+                sumGunneryL += p.getSkill(SkillType.S_GUN_MECH_L).getFinalSkillValue();
                 hasGunnery = true;
             }
-            if (p.hasSkill(gunType + "/Ballistic")) {
-                sumGunneryB += p.getSkill(gunType + "/Ballistic").getFinalSkillValue();
+            if (SkillType.S_GUN_MECH.equals(gunType) && p.hasSkill(SkillType.S_GUN_MECH_M)) {
+                sumGunneryB += p.getSkill(SkillType.S_GUN_MECH_M).getFinalSkillValue();
                 hasGunnery = true;
             }
-            if (p.hasSkill(gunType + "/Missile")) {
-                sumGunneryM += p.getSkill(gunType + "/Missile").getFinalSkillValue();
+            if (SkillType.S_GUN_MECH.equals(gunType) && p.hasSkill(SkillType.S_GUN_MECH_B)) {
+                sumGunneryM += p.getSkill(SkillType.S_GUN_MECH_B).getFinalSkillValue();
                 hasGunnery = true;
             }
 
@@ -3452,18 +3452,18 @@ public class Unit implements MekHqXmlSerializable, ITechnology {
         if (p.hasSkill(gunType)) {
             gunnery = p.getSkill(gunType).getFinalSkillValue();
         }
-        if (p.hasSkill(gunType+"/Laser")) {
-            gunneryL = p.getSkill(gunType+"/Laser").getFinalSkillValue();
+        if (SkillType.S_GUN_MECH.equals(gunType) && p.hasSkill(SkillType.S_GUN_MECH_L)) {
+            gunneryL = p.getSkill(SkillType.S_GUN_MECH_L).getFinalSkillValue();
         } else {
             gunneryL = gunnery;
         }
-        if (p.hasSkill(gunType+"/Missile")) {
-            gunneryM = p.getSkill(gunType+"/Missile").getFinalSkillValue();
+        if (SkillType.S_GUN_MECH.equals(gunType) && p.hasSkill(SkillType.S_GUN_MECH_M)) {
+            gunneryM = p.getSkill(SkillType.S_GUN_MECH_M).getFinalSkillValue();
         } else {
             gunneryM = gunnery;
         }
-        if (p.hasSkill(gunType+"/Ballistic")) {
-            gunneryB = p.getSkill(gunType+"/Ballistic").getFinalSkillValue();
+        if (SkillType.S_GUN_MECH.equals(gunType) && p.hasSkill(SkillType.S_GUN_MECH_B)) {
+            gunneryB = p.getSkill(SkillType.S_GUN_MECH_B).getFinalSkillValue();
         } else {
             gunneryB = gunnery;
         }

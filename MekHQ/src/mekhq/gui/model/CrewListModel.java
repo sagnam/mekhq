@@ -15,6 +15,7 @@ import javax.swing.ListCellRenderer;
 import megamek.common.Aero;
 import megamek.common.Tank;
 import megamek.common.VTOL;
+import megamek.common.options.OptionsConstants;
 import mekhq.IconPackage;
 import mekhq.campaign.personnel.Person;
 import mekhq.campaign.personnel.SkillType;
@@ -138,10 +139,32 @@ public class CrewListModel extends AbstractListModel<Person> {
                     .append(" (");
             String gunSkill = SkillType.getGunnerySkillFor(unit.getEntity());
             String driveSkill = SkillType.getDrivingSkillFor(unit.getEntity());
-            if (p.hasSkill(gunSkill)) {
-                sb.append(p.getSkill(gunSkill).getFinalSkillValue());
+
+            if (SkillType.S_GUN_MECH.equals(gunSkill)
+                && unit.getCampaign().getGameOptions().booleanOption(OptionsConstants.RPG_RPG_GUNNERY)) {
+                if (p.hasSkill(SkillType.S_GUN_MECH_L)) {
+                    sb.append(p.getSkill(SkillType.S_GUN_MECH_L).getFinalSkillValue());
+                } else {
+                    sb.append("-");
+                }
+                sb.append("/");
+                if (p.hasSkill(SkillType.S_GUN_MECH_M)) {
+                    sb.append(p.getSkill(SkillType.S_GUN_MECH_M).getFinalSkillValue()).append("/");
+                } else {
+                    sb.append("-");
+                }
+                sb.append("/");
+                if (p.hasSkill(SkillType.S_GUN_MECH_B)) {
+                    sb.append(p.getSkill(SkillType.S_GUN_MECH_B).getFinalSkillValue());
+                } else {
+                    sb.append("-");
+                }
             } else {
-                sb.append("-");
+                if (p.hasSkill(gunSkill)) {
+                    sb.append(p.getSkill(gunSkill).getFinalSkillValue());
+                } else {
+                    sb.append("-");
+                }
             }
             sb.append("/");
             if (p.hasSkill(driveSkill)) {

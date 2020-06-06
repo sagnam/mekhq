@@ -4531,10 +4531,13 @@ public class Campaign implements Serializable, ITechManager {
             case (Person.T_MECHWARRIOR):
                 person.addSkill(SkillType.S_PILOT_MECH, expLvl,
                         rskillPrefs.randomizeSkill(), bonus, mod);
-                person.addSkill(SkillType.S_GUN_MECH, expLvl, rskillPrefs.randomizeSkill(), bonus, mod);
                 person.addSkill(SkillType.S_GUN_MECH_L, expLvl, rskillPrefs.randomizeSkill(), bonus, mod);
                 person.addSkill(SkillType.S_GUN_MECH_M, expLvl, rskillPrefs.randomizeSkill(), bonus, mod);
                 person.addSkill(SkillType.S_GUN_MECH_B, expLvl, rskillPrefs.randomizeSkill(), bonus, mod);
+                int levelGunAvg = ((person.getSkill(SkillType.S_GUN_MECH_L).getLevel()
+                        + person.getSkill(SkillType.S_GUN_MECH_M).getLevel()
+                        + person.getSkill(SkillType.S_GUN_MECH_B).getLevel()) / 3);
+                person.addSkill(SkillType.S_GUN_MECH, levelGunAvg, bonus);
                 break;
             case (Person.T_GVEE_DRIVER):
                 person.addSkill(SkillType.S_PILOT_GVEE, expLvl,

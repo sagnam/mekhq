@@ -356,17 +356,27 @@ import mekhq.gui.BasicInfo;
             if(col == COL_MECH) {
                 String toReturn = "";
                 if (campaign.getGameOptions().booleanOption(OptionsConstants.RPG_RPG_GUNNERY)) {
-                    if(p.hasSkill(SkillType.S_GUN_MECH_L) && p.hasSkill(SkillType.S_GUN_MECH_M)
-                            && p.hasSkill(SkillType.S_GUN_MECH_B)) {
-                        toReturn = "L" +
-                                p.getSkill(SkillType.S_GUN_MECH_L).getFinalSkillValue() +
-                                "M" +
-                                p.getSkill(SkillType.S_GUN_MECH_M).getFinalSkillValue() +
-                                "B" +
-                                p.getSkill(SkillType.S_GUN_MECH_B).getFinalSkillValue();
+                    if(p.hasSkill(SkillType.S_GUN_MECH_L)) {
+                        toReturn = Integer.toString(p.getSkill(SkillType.S_GUN_MECH_L).getFinalSkillValue());
+                    } else {
+                        toReturn = "-";
+                    }
+
+                    toReturn += "/";
+
+                    if(p.hasSkill(SkillType.S_GUN_MECH_M)) {
+                        toReturn += p.getSkill(SkillType.S_GUN_MECH_M).getFinalSkillValue();
                     } else {
                         toReturn += "-";
                     }
+                    toReturn += "/";
+
+                    if(p.hasSkill(SkillType.S_GUN_MECH_B)) {
+                        toReturn += p.getSkill(SkillType.S_GUN_MECH_B).getFinalSkillValue();
+                    } else {
+                        toReturn += "-";
+                    }
+
                 } else {
                     if(p.hasSkill(SkillType.S_GUN_MECH)) {
                         toReturn += Integer.toString(p.getSkill(SkillType.S_GUN_MECH).getFinalSkillValue());

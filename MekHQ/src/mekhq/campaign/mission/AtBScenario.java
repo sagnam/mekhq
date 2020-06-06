@@ -54,7 +54,9 @@ import megamek.common.MechSummaryCache;
 import megamek.common.PlanetaryConditions;
 import megamek.common.UnitType;
 import megamek.common.logging.LogLevel;
+import megamek.common.options.OptionsConstants;
 import megamek.common.util.EncodeControl;
+import megamek.common.util.generator.CrewSkillSummaryUtil;
 import mekhq.MekHQ;
 import mekhq.MekHqXmlUtil;
 import mekhq.Utilities;
@@ -1602,8 +1604,7 @@ public abstract class AtBScenario extends Scenario implements IAtBScenario {
                 stub.add("<html><font color='red'>No random assignment table found for faction</font></html>");
             } else {
                 stub.add("<html>" + en.getCrew().getName() + " (" +
-                        en.getCrew().getGunnery() + "/" +
-                        en.getCrew().getPiloting() + "), " +
+                        CrewSkillSummaryUtil.getPilotSkillSummary(en.getCrew(), en.getGame().getOptions().booleanOption(OptionsConstants.RPG_RPG_GUNNERY)) + "), " +
                         "<i>" + en.getShortName() + "</i>" +
                         "</html>");
             }

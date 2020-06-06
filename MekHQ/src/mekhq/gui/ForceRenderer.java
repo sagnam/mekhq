@@ -13,6 +13,8 @@ import megamek.client.ui.Messages;
 import megamek.common.Crew;
 import megamek.common.Entity;
 import megamek.common.GunEmplacement;
+import megamek.common.options.OptionsConstants;
+import megamek.common.util.generator.CrewSkillSummaryUtil;
 import mekhq.IconPackage;
 import mekhq.campaign.force.Force;
 import mekhq.campaign.personnel.Person;
@@ -60,7 +62,7 @@ public class ForceRenderer extends DefaultTreeCellRenderer {
             Person pp = u.getCommander();
             if(null != pp) {
                 name = pp.getFullTitle();
-                name += " (" + u.getEntity().getCrew().getGunnery() + "/" + u.getEntity().getCrew().getPiloting() + ")";
+                name += " (" + CrewSkillSummaryUtil.getPilotSkillSummary(u.getEntity().getCrew(), u.getCampaign().getGameOptions().booleanOption(OptionsConstants.RPG_RPG_GUNNERY)) + ")";
                 if(pp.needsFixing() || u.getEntity().getCrew().getHits() > 0) {
                     name = "<font color='red'>" + name + "</font>";
                 }

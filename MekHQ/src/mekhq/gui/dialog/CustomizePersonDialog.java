@@ -838,9 +838,19 @@ public class CustomizePersonDialog extends javax.swing.JDialog implements Dialog
         c.gridx = 0;
 
         for(int i = 0; i < SkillType.getSkillList().length; i++) {
-        	c.gridy = i;
+            final String type = SkillType.getSkillList()[i];
+            if (campaign.getGameOptions().booleanOption(OptionsConstants.RPG_RPG_GUNNERY)) {
+                if (SkillType.isSingleMechGunnaery(type)) {
+                    continue;
+                }
+            } else {
+                if (SkillType.isRpgMechGunnaery(type)) {
+                    continue;
+                }
+            }
+
+            c.gridy = i;
         	c.gridx = 0;
-        	final String type = SkillType.getSkillList()[i];
         	chkSkill = new JCheckBox();
         	chkSkill.setSelected(person.hasSkill(type));
         	skillChks.put(type, chkSkill);

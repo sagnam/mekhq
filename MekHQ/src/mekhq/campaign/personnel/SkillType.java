@@ -425,6 +425,15 @@ public class SkillType implements Serializable {
         return S_GUN_MECH;
     }
 
+    public static boolean isSingleMechGunnaery(String skillName) {
+        return skillName.equals(SkillType.S_GUN_MECH);
+    }
+
+    public static boolean isRpgMechGunnaery(String skillName) {
+        return skillName.equals(SkillType.S_GUN_MECH_L)|| skillName.equals(SkillType.S_GUN_MECH_M)
+                || skillName.equals(SkillType.S_GUN_MECH_B);
+    }
+
     public static String[][] getSkillCostsArray() {
         String[][] array = new String[skillList.length][11];
         int i = 0;

@@ -139,11 +139,12 @@ public class MercRosterAccess extends SwingWorker<Void, Void> {
         try {
             statement.execute("TRUNCATE TABLE " + table + ".skilltypes");
             for(int i = 0; i < SkillType.skillList.length; i++) {
+                final String skill = SkillType.skillList[i];
                 preparedStatement = connect.prepareStatement("INSERT INTO " + table + ".skilltypes (name, shortname) VALUES (?, ?)");
-                preparedStatement.setString(1, truncateString(SkillType.skillList[i], 60));
-                preparedStatement.setString(2, truncateString(getShortSkillName(SkillType.skillList[i]), 60));
+                preparedStatement.setString(1, truncateString(skill, 60));
+                preparedStatement.setString(2, truncateString(getShortSkillName(skill), 60));
                 preparedStatement.executeUpdate();
-                skillHash.put(SkillType.skillList[i], i+1);
+                skillHash.put(skill, i + 1);
                 progressTicker++;
                 determineProgress();
             }
@@ -168,6 +169,18 @@ public class MercRosterAccess extends SwingWorker<Void, Void> {
                     preparedStatement.executeUpdate();
                     preparedStatement = connect.prepareStatement("INSERT INTO " + table + ".skillrequirements (skilltype, personneltype) VALUES (?, ?)");
                     preparedStatement.setInt(1, skillHash.get(SkillType.S_GUN_MECH));
+                    preparedStatement.setInt(2, i);
+                    preparedStatement.executeUpdate();
+                    preparedStatement = connect.prepareStatement("INSERT INTO " + table + ".skillrequirements (skilltype, personneltype) VALUES (?, ?)");
+                    preparedStatement.setInt(1, skillHash.get(SkillType.S_GUN_MECH_L));
+                    preparedStatement.setInt(2, i);
+                    preparedStatement.executeUpdate();
+                    preparedStatement = connect.prepareStatement("INSERT INTO " + table + ".skillrequirements (skilltype, personneltype) VALUES (?, ?)");
+                    preparedStatement.setInt(1, skillHash.get(SkillType.S_GUN_MECH_M));
+                    preparedStatement.setInt(2, i);
+                    preparedStatement.executeUpdate();
+                    preparedStatement = connect.prepareStatement("INSERT INTO " + table + ".skillrequirements (skilltype, personneltype) VALUES (?, ?)");
+                    preparedStatement.setInt(1, skillHash.get(SkillType.S_GUN_MECH_B));
                     preparedStatement.setInt(2, i);
                     preparedStatement.executeUpdate();
                     equipment = 1;
@@ -497,7 +510,7 @@ public class MercRosterAccess extends SwingWorker<Void, Void> {
                         Skill skill = p.getSkill(SkillType.skillList[i]);
                         preparedStatement = connect.prepareStatement("INSERT INTO " + table + ".skills (person, skill, value) VALUES (?, ?, ?)");
                         preparedStatement.setInt(1, id);
-                        preparedStatement.setInt(2, i+1);
+                        preparedStatement.setInt(2, i + 1);
                         preparedStatement.setInt(3, skill.getFinalSkillValue());
                         preparedStatement.executeUpdate();
                     }

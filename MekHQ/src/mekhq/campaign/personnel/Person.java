@@ -2256,6 +2256,26 @@ public class Person implements Serializable, MekHqXmlSerializable {
 
                     return (int) Math.floor((getSkill(SkillType.S_GUN_MECH).getExperienceLevel()
                                              + getSkill(SkillType.S_PILOT_MECH).getExperienceLevel()) / 2.0);
+                } else if ((hasSkill(SkillType.S_GUN_MECH_L) || hasSkill(SkillType.S_GUN_MECH_B)
+                        || hasSkill(SkillType.S_GUN_MECH_M)) && hasSkill(SkillType.S_PILOT_MECH)) {
+                    /* Attempt to use higher precision averaging, but if it doesn't provide a clear result
+                    due to non-standard experience thresholds then fall back on lower precision averaging
+                    See Bug #140 */
+                    int avgGunnery = (getSkill(SkillType.S_GUN_MECH_L).getLevel()
+                            + getSkill(SkillType.S_GUN_MECH_M).getLevel()
+                            + getSkill(SkillType.S_GUN_MECH_B).getLevel()) / 3;
+                    if(campaign.getCampaignOptions().useAltQualityAveraging()) {
+                        int rawScore = (int) Math.floor(
+                                (avgGunnery + getSkill(SkillType.S_PILOT_MECH).getLevel()) / 2.0
+                        );
+                        if(getSkill(SkillType.S_GUN_MECH).getType().getExperienceLevel(rawScore) ==
+                                getSkill(SkillType.S_PILOT_MECH).getType().getExperienceLevel(rawScore)) {
+                            return getSkill(SkillType.S_GUN_MECH).getType().getExperienceLevel(rawScore);
+                        }
+                    }
+
+                    return (int) Math.floor((getSkill(SkillType.S_GUN_MECH_L).getType().getExperienceLevel(avgGunnery)
+                            + getSkill(SkillType.S_PILOT_MECH).getExperienceLevel()) / 2.0);
                 } else {
                     return -1;
                 }
