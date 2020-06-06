@@ -1124,7 +1124,7 @@ public class Unit implements MekHqXmlSerializable, ITechnology {
                     .map(x -> x.getActualValue().multipliedBy(x.getQuantity()))
                     .collect(Collectors.toList()));
 
-        //TODO: we need to adjust this for equipment that doesn't show up as parts
+        //TODO: we need to adjustexport  this for equipment that doesn't show up as parts
         //Spacecraft need: drive unit, computer, and bridge
         if(entity instanceof SmallCraft || entity instanceof Jumpship) {
             //bridge
@@ -1218,6 +1218,8 @@ public class Unit implements MekHqXmlSerializable, ITechnology {
             }
             partsValue = partsValue.plus(2000.0 * sinks);
         }
+
+//        partsValue = partsValue.multipliedBy(entity.getPriceMultiplier());
 
         return partsValue;
     }
@@ -3073,7 +3075,11 @@ public class Unit implements MekHqXmlSerializable, ITechnology {
                     for (String optionName : optionNames) {
                         IOption option = commander.getOptions().getOption(optionName);
                         if (null != option) {
-                            cdrOptions.getOption(optionName).setValue(option.getValue());
+                            if (OptionsConstants.EDGE.equals(optionName)) {
+                                cdrOptions.getOption(optionName).setValue(commander.getCurrentEdge());
+                            } else {
+                                cdrOptions.getOption(optionName).setValue(option.getValue());
+                            }
                         }
                     }
                     for (String implantName : cyberOptionNames) {
@@ -3082,6 +3088,7 @@ public class Unit implements MekHqXmlSerializable, ITechnology {
                             cdrOptions.getOption(implantName).setValue(option.getValue());
                         }
                     }
+
                     entity.getCrew().setOptions(cdrOptions);
 
                     if(usesSoloPilot()) {
@@ -3119,12 +3126,18 @@ public class Unit implements MekHqXmlSerializable, ITechnology {
 
         int piloting = 13;
         int gunnery = 13;
+        int gunneryL = 13;
+        int gunneryB = 13;
+        int gunneryM = 13;
         int artillery = 13;
         String driveType = SkillType.getDrivingSkillFor(entity);
         String gunType = SkillType.getGunnerySkillFor(entity);
         int sumPiloting = 0;
         int nDrivers = 0;
         int sumGunnery = 0;
+        int sumGunneryL = 0;
+        int sumGunneryB = 0;
+        int sumGunneryM = 0;
         int nGunners = 0;
         int nCrew = 0;
 
@@ -3143,10 +3156,28 @@ public class Unit implements MekHqXmlSerializable, ITechnology {
             }
 
             if (entity instanceof Tank
-                    && Compute.getFullCrewSize(entity) == 1
-                    && p.hasSkill(gunType)) {
-                sumGunnery += p.getSkill(gunType).getFinalSkillValue();
-                nGunners++;
+                    && Compute.getFullCrewSize(entity) == 1) {
+                boolean hasGunnery = false;
+                if (p.hasSkill(gunType)) {
+                    sumGunnery += p.getSkill(gunType).getFinalSkillValue();
+                    hasGunnery = true;
+                }
+                if (p.hasSkill(gunType + "/Laser")) {
+                    sumGunneryL += p.getSkill(gunType + "/Laser").getFinalSkillValue();
+                    hasGunnery = true;
+                }
+                if (p.hasSkill(gunType + "/Ballistic")) {
+                    sumGunneryB += p.getSkill(gunType + "/Ballistic").getFinalSkillValue();
+                    hasGunnery = true;
+                }
+                if (p.hasSkill(gunType + "/Missile")) {
+                    sumGunneryM += p.getSkill(gunType + "/Missile").getFinalSkillValue();
+                    hasGunnery = true;
+                }
+
+                if (hasGunnery) {
+                    nGunners++;
+                }
             }
             if(getCampaign().getCampaignOptions().useAdvancedMedical()) {
                 sumPiloting += p.getPilotingInjuryMod();
@@ -3157,10 +3188,29 @@ public class Unit implements MekHqXmlSerializable, ITechnology {
             if(p.getHits() > 0 && !usesSoloPilot()) {
                 continue;
             }
-            if(p.hasSkill(gunType)) {
+
+            boolean hasGunnery = false;
+            if (p.hasSkill(gunType)) {
                 sumGunnery += p.getSkill(gunType).getFinalSkillValue();
+                hasGunnery = true;
+            }
+            if (p.hasSkill(gunType + "/Laser")) {
+                sumGunneryL += p.getSkill(gunType + "/Laser").getFinalSkillValue();
+                hasGunnery = true;
+            }
+            if (p.hasSkill(gunType + "/Ballistic")) {
+                sumGunneryB += p.getSkill(gunType + "/Ballistic").getFinalSkillValue();
+                hasGunnery = true;
+            }
+            if (p.hasSkill(gunType + "/Missile")) {
+                sumGunneryM += p.getSkill(gunType + "/Missile").getFinalSkillValue();
+                hasGunnery = true;
+            }
+
+            if (hasGunnery) {
                 nGunners++;
             }
+
             if(p.hasSkill(SkillType.S_ARTILLERY)
                     && p.getSkill(SkillType.S_ARTILLERY).getFinalSkillValue() < artillery) {
                 artillery = p.getSkill(SkillType.S_ARTILLERY).getFinalSkillValue();
@@ -3201,7 +3251,11 @@ public class Unit implements MekHqXmlSerializable, ITechnology {
         }
         if(nGunners > 0) {
             gunnery = (int)Math.round(((double)sumGunnery)/nGunners);
+            gunneryL = (int)Math.round(((double)sumGunneryL)/nGunners);
+            gunneryM = (int)Math.round(((double)sumGunneryM)/nGunners);
+            gunneryB = (int)Math.round(((double)sumGunneryB)/nGunners);
         }
+
         if(entity instanceof Infantry) {
             if(entity instanceof BattleArmor) {
                 int ntroopers = 0;
@@ -3273,6 +3327,15 @@ public class Unit implements MekHqXmlSerializable, ITechnology {
         //and set it to true when we start up through MHQ
         entity.getCrew().setPiloting(Math.min(Math.max(piloting, 0), 8), 0);
         entity.getCrew().setGunnery(Math.min(Math.max(gunnery, 0), 7), 0);
+        if (campaign.getGameOptions().booleanOption(OptionsConstants.RPG_RPG_GUNNERY)) {
+            entity.getCrew().setGunneryL(Math.min(Math.max(gunneryL, 0), 7), 0);
+            entity.getCrew().setGunneryM(Math.min(Math.max(gunneryM, 0), 7), 0);
+            entity.getCrew().setGunneryB(Math.min(Math.max(gunneryB, 0), 7), 0);
+        } else {
+            entity.getCrew().setGunneryL(Math.min(Math.max(gunnery, 0), 7), 0);
+            entity.getCrew().setGunneryM(Math.min(Math.max(gunnery, 0), 7), 0);
+            entity.getCrew().setGunneryB(Math.min(Math.max(gunnery, 0), 7), 0);
+        }
         entity.getCrew().setArtillery(Math.min(Math.max(artillery, 0), 8), 0);
         entity.getCrew().setSize(nCrew);
         entity.getCrew().setMissing(false, 0);
@@ -3301,6 +3364,20 @@ public class Unit implements MekHqXmlSerializable, ITechnology {
         if (pilot.hasSkill(SkillType.S_GUN_MECH)) {
             gunneryMech = pilot.getSkill(SkillType.S_GUN_MECH).getFinalSkillValue();
         }
+
+        int gunneryMechL = gunneryMech;
+        int gunneryMechM = gunneryMech;
+        int gunneryMechB = gunneryMech;
+
+        if (pilot.hasSkill(SkillType.S_GUN_MECH_L)) {
+            gunneryMechL = pilot.getSkill(SkillType.S_GUN_MECH_L).getFinalSkillValue();
+        }
+        if (pilot.hasSkill(SkillType.S_GUN_MECH_M)) {
+            gunneryMechM = pilot.getSkill(SkillType.S_GUN_MECH_M).getFinalSkillValue();
+        }
+        if (pilot.hasSkill(SkillType.S_GUN_MECH_B)) {
+            gunneryMechB = pilot.getSkill(SkillType.S_GUN_MECH_B).getFinalSkillValue();
+        }
         if (pilot.hasSkill(SkillType.S_PILOT_AERO)) {
             pilotingAero = pilot.getSkill(SkillType.S_PILOT_AERO).getFinalSkillValue();
         }
@@ -3311,18 +3388,42 @@ public class Unit implements MekHqXmlSerializable, ITechnology {
             artillery = pilot.getSkill(SkillType.S_ARTILLERY).getFinalSkillValue();
         }
 
+        int gunneryAeroL = gunneryMechL;
+        int gunneryAeroM = gunneryMechM;
+        int gunneryAeroB = gunneryMechB;
+
         if (getCampaign().getCampaignOptions().useAdvancedMedical()) {
             pilotingMech += pilot.getPilotingInjuryMod();
             gunneryMech += pilot.getGunneryInjuryMod();
             pilotingAero += pilot.getPilotingInjuryMod();
             gunneryAero += pilot.getGunneryInjuryMod();
+            gunneryAeroL += pilot.getGunneryInjuryMod();
+            gunneryAeroM += pilot.getGunneryInjuryMod();
+            gunneryAeroB += pilot.getGunneryInjuryMod();
             artillery += pilot.getGunneryInjuryMod();
         }
+
+
         LAMPilot crew = (LAMPilot)entity.getCrew();
         crew.setPiloting(Math.min(Math.max(pilotingMech, 0), 8));
         crew.setGunnery(Math.min(Math.max(gunneryMech, 0), 7));
-        crew.setPilotingAero(Math.min(Math.max(pilotingAero, 0), 8));
         crew.setGunneryAero(Math.min(Math.max(gunneryAero, 0), 7));
+        crew.setPilotingAero(Math.min(Math.max(pilotingAero, 0), 8));
+        if (campaign.getGameOptions().booleanOption(OptionsConstants.RPG_RPG_GUNNERY)) {
+            crew.setGunneryMechL(Math.min(Math.max(gunneryMechL, 0), 7));
+            crew.setGunneryMechM(Math.min(Math.max(gunneryMechM, 0), 7));
+            crew.setGunneryMechB(Math.min(Math.max(gunneryMechB, 0), 7));
+            crew.setGunneryAeroL(Math.min(Math.max(gunneryAeroL, 0), 7));
+            crew.setGunneryAeroM(Math.min(Math.max(gunneryAeroM, 0), 7));
+            crew.setGunneryAeroB(Math.min(Math.max(gunneryAeroB, 0), 7));
+        } else {
+            crew.setGunneryMechL(Math.min(Math.max(gunneryMech, 0), 7));
+            crew.setGunneryMechM(Math.min(Math.max(gunneryMech, 0), 7));
+            crew.setGunneryMechB(Math.min(Math.max(gunneryMech, 0), 7));
+            crew.setGunneryAeroL(Math.min(Math.max(gunneryAero, 0), 7));
+            crew.setGunneryAeroM(Math.min(Math.max(gunneryAero, 0), 7));
+            crew.setGunneryAeroB(Math.min(Math.max(gunneryAero, 0), 7));
+        }
         entity.getCrew().setArtillery(Math.min(Math.max(artillery, 0), 8), 0);
         entity.getCrew().setSize(1);
         entity.getCrew().setMissing(false, 0);
@@ -3343,13 +3444,34 @@ public class Unit implements MekHqXmlSerializable, ITechnology {
         entity.getCrew().setPortraitFileName(p.getPortraitFileName(), slot);
         entity.getCrew().setHits(p.getHits(), slot);
         int gunnery = 7;
+        int gunneryL = 7;
+        int gunneryM = 7;
+        int gunneryB = 7;
         int artillery = 7;
         int piloting = 8;
         if (p.hasSkill(gunType)) {
             gunnery = p.getSkill(gunType).getFinalSkillValue();
         }
+        if (p.hasSkill(gunType+"/Laser")) {
+            gunneryL = p.getSkill(gunType+"/Laser").getFinalSkillValue();
+        } else {
+            gunneryL = gunnery;
+        }
+        if (p.hasSkill(gunType+"/Missile")) {
+            gunneryM = p.getSkill(gunType+"/Missile").getFinalSkillValue();
+        } else {
+            gunneryM = gunnery;
+        }
+        if (p.hasSkill(gunType+"/Ballistic")) {
+            gunneryB = p.getSkill(gunType+"/Ballistic").getFinalSkillValue();
+        } else {
+            gunneryB = gunnery;
+        }
         if (getCampaign().getCampaignOptions().useAdvancedMedical()) {
             gunnery += p.getGunneryInjuryMod();
+            gunneryL += p.getGunneryInjuryMod();
+            gunneryM += p.getGunneryInjuryMod();
+            gunneryB += p.getGunneryInjuryMod();
         }
         if (p.hasSkill(driveType)) {
             piloting = p.getSkill(driveType).getFinalSkillValue();
@@ -3361,9 +3483,15 @@ public class Unit implements MekHqXmlSerializable, ITechnology {
         entity.getCrew().setPiloting(Math.min(Math.max(piloting, 0), 8), slot);
         entity.getCrew().setGunnery(Math.min(Math.max(gunnery, 0), 7), slot);
         //also set RPG gunnery skills in case present in game options
-        entity.getCrew().setGunneryL(Math.min(Math.max(gunnery, 0), 7), slot);
-        entity.getCrew().setGunneryM(Math.min(Math.max(gunnery, 0), 7), slot);
-        entity.getCrew().setGunneryB(Math.min(Math.max(gunnery, 0), 7), slot);
+        if (campaign.getGameOptions().booleanOption(OptionsConstants.RPG_RPG_GUNNERY)) {
+            entity.getCrew().setGunneryL(Math.min(Math.max(gunneryL, 0), 7), slot);
+            entity.getCrew().setGunneryM(Math.min(Math.max(gunneryM, 0), 7), slot);
+            entity.getCrew().setGunneryB(Math.min(Math.max(gunneryB, 0), 7), slot);
+        } else {
+            entity.getCrew().setGunneryL(Math.min(Math.max(gunnery, 0), 7), slot);
+            entity.getCrew().setGunneryM(Math.min(Math.max(gunnery, 0), 7), slot);
+            entity.getCrew().setGunneryB(Math.min(Math.max(gunnery, 0), 7), slot);
+        }
         entity.getCrew().setArtillery(Math.min(Math.max(artillery, 0), 7), slot);
         entity.getCrew().setToughness(p.getToughness(), slot);
         entity.getCrew().setExternalIdAsString(p.getId().toString(), slot);

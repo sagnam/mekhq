@@ -17,6 +17,7 @@ import megamek.common.Jumpship;
 import megamek.common.SmallCraft;
 import megamek.common.Tank;
 import megamek.common.UnitType;
+import megamek.common.options.OptionsConstants;
 import megamek.common.options.PilotOptions;
 import mekhq.IconPackage;
 import mekhq.campaign.Campaign;
@@ -354,11 +355,26 @@ import mekhq.gui.BasicInfo;
             }
             if(col == COL_MECH) {
                 String toReturn = "";
-                if(p.hasSkill(SkillType.S_GUN_MECH)) {
-                    toReturn += Integer.toString(p.getSkill(SkillType.S_GUN_MECH).getFinalSkillValue());
+                if (campaign.getGameOptions().booleanOption(OptionsConstants.RPG_RPG_GUNNERY)) {
+                    if(p.hasSkill(SkillType.S_GUN_MECH_L) && p.hasSkill(SkillType.S_GUN_MECH_M)
+                            && p.hasSkill(SkillType.S_GUN_MECH_B)) {
+                        toReturn = "L" +
+                                p.getSkill(SkillType.S_GUN_MECH_L).getFinalSkillValue() +
+                                "M" +
+                                p.getSkill(SkillType.S_GUN_MECH_M).getFinalSkillValue() +
+                                "B" +
+                                p.getSkill(SkillType.S_GUN_MECH_B).getFinalSkillValue();
+                    } else {
+                        toReturn += "-";
+                    }
                 } else {
-                    toReturn += "-";
+                    if(p.hasSkill(SkillType.S_GUN_MECH)) {
+                        toReturn += Integer.toString(p.getSkill(SkillType.S_GUN_MECH).getFinalSkillValue());
+                    } else {
+                        toReturn += "-";
+                    }
                 }
+
                 toReturn += "/";
                 if(p.hasSkill(SkillType.S_PILOT_MECH)) {
                     toReturn += Integer.toString(p.getSkill(SkillType.S_PILOT_MECH).getFinalSkillValue());

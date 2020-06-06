@@ -65,6 +65,9 @@ public class SkillType implements Serializable {
     public static final String S_PILOT_NVEE  = "Piloting/Naval";
     public static final String S_PILOT_SPACE = "Piloting/Spacecraft";
     public static final String S_GUN_MECH    = "Gunnery/Mech";
+    public static final String S_GUN_MECH_L  = "Gunnery/Mech/Laser";
+    public static final String S_GUN_MECH_B  = "Gunnery/Mech/Ballistic";
+    public static final String S_GUN_MECH_M  = "Gunnery/Mech/Missile";
     public static final String S_GUN_AERO    = "Gunnery/Aerospace";
     public static final String S_GUN_JET     = "Gunnery/Aircraft";
     public static final String S_GUN_VEE     = "Gunnery/Vehicle";
@@ -93,11 +96,13 @@ public class SkillType implements Serializable {
     
     public static final int NUM_LEVELS = 11;
     
-    public static final String[] skillList = {S_PILOT_MECH,S_GUN_MECH,S_PILOT_AERO,S_GUN_AERO,
-                                              S_PILOT_GVEE,S_PILOT_VTOL,S_PILOT_NVEE,S_GUN_VEE,
-                                              S_PILOT_JET,S_GUN_JET,S_PILOT_SPACE,S_GUN_SPACE,S_ARTILLERY,
+    public static final String[] skillList = {S_PILOT_MECH,S_GUN_MECH,S_GUN_MECH_L,S_GUN_MECH_M,
+                                              S_GUN_MECH_B,S_PILOT_AERO,S_GUN_AERO,S_PILOT_GVEE,
+                                              S_PILOT_VTOL,S_PILOT_NVEE,S_GUN_VEE,S_PILOT_JET,
+                                              S_GUN_JET,S_PILOT_SPACE,S_GUN_SPACE,S_ARTILLERY,
                                               S_GUN_BA,S_GUN_PROTO,S_SMALL_ARMS,S_ANTI_MECH,
-                                              S_TECH_MECH,S_TECH_MECHANIC,S_TECH_AERO,S_TECH_BA,S_TECH_VESSEL,S_ASTECH,
+                                              S_TECH_MECH,S_TECH_MECHANIC,S_TECH_AERO,S_TECH_BA,
+                                              S_TECH_VESSEL,S_ASTECH,
                                               S_DOCTOR,S_MEDTECH,S_NAV,
                                               S_ADMIN,
                                               S_TACTICS,S_STRATEGY,
@@ -242,7 +247,8 @@ public class SkillType implements Serializable {
     }
     
     public boolean isGunnery() {
-        return name.equals(S_GUN_MECH) || name.equals(S_GUN_AERO)
+        return name.equals(S_GUN_MECH) || name.equals(S_GUN_MECH_L) || name.equals(S_GUN_MECH_M)
+                    || name.equals(S_GUN_MECH_B) || name.equals(S_GUN_AERO)
                     || name.equals(S_GUN_VEE) || name.equals(S_GUN_BA)
                     || name.equals(S_SMALL_ARMS) || name.equals(S_GUN_JET)
                     || name.equals(S_GUN_SPACE) || name.equals(S_GUN_PROTO) 
@@ -274,6 +280,9 @@ public class SkillType implements Serializable {
         lookupHash = new Hashtable<String, SkillType>();
         lookupHash.put(S_PILOT_MECH, createPilotingMech());
         lookupHash.put(S_GUN_MECH, createGunneryMech());
+        lookupHash.put(S_GUN_MECH_L, createGunneryLMech());
+        lookupHash.put(S_GUN_MECH_M, createGunneryMMech());
+        lookupHash.put(S_GUN_MECH_B, createGunneryBMech());
         lookupHash.put(S_PILOT_AERO, createPilotingAero());
         lookupHash.put(S_GUN_AERO, createGunneryAero());
         lookupHash.put(S_PILOT_JET, createPilotingJet());
@@ -596,7 +605,40 @@ public class SkillType implements Serializable {
      
         return skill;
     }
-    
+
+    public static SkillType createGunneryLMech() {
+        SkillType skill = new SkillType();
+        skill.name = S_GUN_MECH_L;
+        skill.target = 7;
+        skill.greenLvl = 2;
+        skill.countUp = false;
+        skill.costs = new Integer[]{16,8,8,8,8,8,8,8,-1,-1,-1};
+
+        return skill;
+    }
+
+    public static SkillType createGunneryMMech() {
+        SkillType skill = new SkillType();
+        skill.name = S_GUN_MECH_M;
+        skill.target = 7;
+        skill.greenLvl = 2;
+        skill.countUp = false;
+        skill.costs = new Integer[]{16,8,8,8,8,8,8,8,-1,-1,-1};
+
+        return skill;
+    }
+
+    public static SkillType createGunneryBMech() {
+        SkillType skill = new SkillType();
+        skill.name = S_GUN_MECH_B;
+        skill.target = 7;
+        skill.greenLvl = 2;
+        skill.countUp = false;
+        skill.costs = new Integer[]{16,8,8,8,8,8,8,8,-1,-1,-1};
+
+        return skill;
+    }
+
     public static SkillType createPilotingAero() {
         SkillType skill = new SkillType();
         skill.name = S_PILOT_AERO;

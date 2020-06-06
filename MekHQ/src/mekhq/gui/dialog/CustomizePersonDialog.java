@@ -1135,6 +1135,9 @@ public class CustomizePersonDialog extends javax.swing.JDialog implements Dialog
             switch(pheno) {
             case Person.PHENOTYPE_MW:
                 skillBonus.get(SkillType.S_GUN_MECH).setValue(1);
+                skillBonus.get(SkillType.S_GUN_MECH_L).setValue(1);
+                skillBonus.get(SkillType.S_GUN_MECH_B).setValue(1);
+                skillBonus.get(SkillType.S_GUN_MECH_M).setValue(1);
                 skillBonus.get(SkillType.S_PILOT_MECH).setValue(1);
                 break;
             case Person.PHENOTYPE_AERO:
@@ -1164,6 +1167,9 @@ public class CustomizePersonDialog extends javax.swing.JDialog implements Dialog
     
     private void clearAllPhenotypeBonuses() {
         skillBonus.get(SkillType.S_GUN_MECH).setValue(0);
+        skillBonus.get(SkillType.S_GUN_MECH_L).setValue(0);
+        skillBonus.get(SkillType.S_GUN_MECH_B).setValue(0);
+        skillBonus.get(SkillType.S_GUN_MECH_M).setValue(0);
         skillBonus.get(SkillType.S_PILOT_MECH).setValue(0);
         skillBonus.get(SkillType.S_GUN_AERO).setValue(0);
         skillBonus.get(SkillType.S_PILOT_AERO).setValue(0);

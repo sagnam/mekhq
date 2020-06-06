@@ -4532,6 +4532,9 @@ public class Campaign implements Serializable, ITechManager {
                 person.addSkill(SkillType.S_PILOT_MECH, expLvl,
                         rskillPrefs.randomizeSkill(), bonus, mod);
                 person.addSkill(SkillType.S_GUN_MECH, expLvl, rskillPrefs.randomizeSkill(), bonus, mod);
+                person.addSkill(SkillType.S_GUN_MECH_L, expLvl, rskillPrefs.randomizeSkill(), bonus, mod);
+                person.addSkill(SkillType.S_GUN_MECH_M, expLvl, rskillPrefs.randomizeSkill(), bonus, mod);
+                person.addSkill(SkillType.S_GUN_MECH_B, expLvl, rskillPrefs.randomizeSkill(), bonus, mod);
                 break;
             case (Person.T_GVEE_DRIVER):
                 person.addSkill(SkillType.S_PILOT_GVEE, expLvl,
@@ -4700,9 +4703,17 @@ public class Campaign implements Serializable, ITechManager {
             int bloodnameTarget = 6;
             switch (person.getPhenotype()) {
                 case Person.PHENOTYPE_MW:
+                    int rpgGunAvg = person.hasSkill(SkillType.S_GUN_MECH_L)
+                            ? person.getSkill(SkillType.S_GUN_MECH_L).getFinalSkillValue() : 13;
+                    rpgGunAvg += person.hasSkill(SkillType.S_GUN_MECH_M)
+                            ? person.getSkill(SkillType.S_GUN_MECH_M).getFinalSkillValue() : 13;
+                    rpgGunAvg += person.hasSkill(SkillType.S_GUN_MECH_B)
+                            ? person.getSkill(SkillType.S_GUN_MECH_B).getFinalSkillValue() : 13;
+                    rpgGunAvg /= 3;
+
                     bloodnameTarget += person.hasSkill(SkillType.S_GUN_MECH)
                             ? person.getSkill(SkillType.S_GUN_MECH).getFinalSkillValue()
-                            : 13;
+                            : rpgGunAvg;
                     bloodnameTarget += person.hasSkill(SkillType.S_PILOT_MECH)
                             ? person.getSkill(SkillType.S_PILOT_MECH).getFinalSkillValue()
                             : 13;

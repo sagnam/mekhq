@@ -608,6 +608,9 @@ public class Utilities {
                 p = c.newPerson(Person.T_MECHWARRIOR, factionCode);
                 p.addSkill(SkillType.S_PILOT_MECH, SkillType.getType(SkillType.S_PILOT_MECH).getTarget() - oldCrew.getPiloting(), 0);
                 p.addSkill(SkillType.S_GUN_MECH, SkillType.getType(SkillType.S_GUN_MECH).getTarget() - oldCrew.getGunnery(), 0);
+                p.addSkill(SkillType.S_GUN_MECH_L, SkillType.getType(SkillType.S_GUN_MECH_L).getTarget() - oldCrew.getGunnery(), 0);
+                p.addSkill(SkillType.S_GUN_MECH_M, SkillType.getType(SkillType.S_GUN_MECH_M).getTarget() - oldCrew.getGunnery(), 0);
+                p.addSkill(SkillType.S_GUN_MECH_B, SkillType.getType(SkillType.S_GUN_MECH_B).getTarget() - oldCrew.getGunnery(), 0);
                 p.addSkill(SkillType.S_PILOT_AERO, SkillType.getType(SkillType.S_PILOT_AERO).getTarget() - oldCrew.getPiloting(), 0);
                 p.addSkill(SkillType.S_GUN_AERO, SkillType.getType(SkillType.S_GUN_AERO).getTarget() - oldCrew.getGunnery(), 0);
                 p.setSecondaryRole(Person.T_AERO_PILOT);
@@ -615,6 +618,9 @@ public class Utilities {
                 p = c.newPerson(Person.T_MECHWARRIOR, factionCode);
                 p.addSkill(SkillType.S_PILOT_MECH, SkillType.getType(SkillType.S_PILOT_MECH).getTarget() - oldCrew.getPiloting(), 0);
                 p.addSkill(SkillType.S_GUN_MECH, SkillType.getType(SkillType.S_GUN_MECH).getTarget() - oldCrew.getGunnery(), 0);
+                p.addSkill(SkillType.S_GUN_MECH_L, SkillType.getType(SkillType.S_GUN_MECH_L).getTarget() - oldCrew.getGunnery(), 0);
+                p.addSkill(SkillType.S_GUN_MECH_M, SkillType.getType(SkillType.S_GUN_MECH_M).getTarget() - oldCrew.getGunnery(), 0);
+                p.addSkill(SkillType.S_GUN_MECH_B, SkillType.getType(SkillType.S_GUN_MECH_B).getTarget() - oldCrew.getGunnery(), 0);
             } else if (u.getEntity() instanceof Aero) {
                 p = c.newPerson(Person.T_AERO_PILOT, factionCode);
                 p.addSkill(SkillType.S_PILOT_AERO, SkillType.getType(SkillType.S_PILOT_AERO).getTarget() - oldCrew.getPiloting(), 0);
@@ -648,6 +654,9 @@ public class Utilities {
                     p = c.newPerson(Person.T_MECHWARRIOR, factionCode);
                     p.addSkill(SkillType.S_PILOT_MECH, SkillType.getType(SkillType.S_PILOT_MECH).getTarget() - oldCrew.getPiloting(slot), 0);
                     p.addSkill(SkillType.S_GUN_MECH, SkillType.getType(SkillType.S_GUN_MECH).getTarget() - oldCrew.getGunnery(slot), 0);
+                    p.addSkill(SkillType.S_GUN_MECH_L, SkillType.getType(SkillType.S_GUN_MECH_L).getTarget() - oldCrew.getGunnery(), 0);
+                    p.addSkill(SkillType.S_GUN_MECH_M, SkillType.getType(SkillType.S_GUN_MECH_M).getTarget() - oldCrew.getGunnery(), 0);
+                    p.addSkill(SkillType.S_GUN_MECH_B, SkillType.getType(SkillType.S_GUN_MECH_B).getTarget() - oldCrew.getGunnery(), 0);
                 } else if(u.getEntity() instanceof Aero) {
                     p = c.newPerson(Person.T_AERO_PILOT, factionCode);
                     p.addSkill(SkillType.S_PILOT_AERO, SkillType.getType(SkillType.S_PILOT_AERO).getTarget() - oldCrew.getPiloting(slot), 0);
@@ -698,6 +707,9 @@ public class Utilities {
                     p = c.newPerson(Person.T_MECHWARRIOR, factionCode);
                     p.addSkill(SkillType.S_PILOT_MECH, SkillType.getType(SkillType.S_PILOT_MECH).getTarget() - oldCrew.getPiloting(), 0);
                     p.addSkill(SkillType.S_GUN_MECH, SkillType.getType(SkillType.S_GUN_MECH).getTarget() - oldCrew.getGunnery(), 0);
+                    p.addSkill(SkillType.S_GUN_MECH_L, SkillType.getType(SkillType.S_GUN_MECH_L).getTarget() - oldCrew.getGunnery(), 0);
+                    p.addSkill(SkillType.S_GUN_MECH_M, SkillType.getType(SkillType.S_GUN_MECH_M).getTarget() - oldCrew.getGunnery(), 0);
+                    p.addSkill(SkillType.S_GUN_MECH_B, SkillType.getType(SkillType.S_GUN_MECH_B).getTarget() - oldCrew.getGunnery(), 0);
                 } else {
                     //assume tanker if we got here
                     p = c.newPerson(Person.T_GVEE_DRIVER, factionCode);
@@ -757,7 +769,16 @@ public class Utilities {
                         p = c.newPerson(Person.T_MECHWARRIOR, factionCode);
                         p.addSkill(SkillType.S_PILOT_MECH, SkillType.getType(SkillType.S_PILOT_MECH).getTarget() - oldCrew.getPiloting(), 0);
                         p.addSkill(SkillType.S_GUN_MECH, SkillType.getType(SkillType.S_GUN_MECH).getTarget() - oldCrew.getGunnery(), 0);
-                        totalGunnery += p.getSkill(SkillType.S_GUN_MECH).getFinalSkillValue();
+                        p.addSkill(SkillType.S_GUN_MECH_L, SkillType.getType(SkillType.S_GUN_MECH_L).getTarget() - oldCrew.getGunnery(), 0);
+                        p.addSkill(SkillType.S_GUN_MECH_M, SkillType.getType(SkillType.S_GUN_MECH_M).getTarget() - oldCrew.getGunnery(), 0);
+                        p.addSkill(SkillType.S_GUN_MECH_B, SkillType.getType(SkillType.S_GUN_MECH_B).getTarget() - oldCrew.getGunnery(), 0);
+                        if (c.getGameOptions().booleanOption(OptionsConstants.RPG_RPG_GUNNERY)) {
+                            totalGunnery += (p.getSkill(SkillType.S_GUN_MECH_L).getFinalSkillValue()
+                                    + p.getSkill(SkillType.S_GUN_MECH_M).getFinalSkillValue()
+                                    + p.getSkill(SkillType.S_GUN_MECH_B).getFinalSkillValue()) / 3;
+                        } else {
+                            totalGunnery += p.getSkill(SkillType.S_GUN_MECH).getFinalSkillValue();
+                        }
                     } else {
                         //assume tanker if we got here
                         p = c.newPerson(Person.T_VEE_GUNNER, factionCode);

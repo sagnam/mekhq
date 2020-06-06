@@ -777,7 +777,7 @@ public class PersonViewPanel extends JPanel {
             gridBagConstraints.anchor = GridBagConstraints.NORTHWEST;
             pnlStats.add(lblEdge2, gridBagConstraints);
             
-            if (person.isAdmin() || person.isDoctor() || person.isTech()) {
+            if (person.isAdmin() || person.isDoctor() || person.isTech() || person.isCombat()) {
                 //Add the Edge Available field for support personnel only
                 secondy++;
                 lblEdgeAvail1.setName("lblEdgeAvail1"); // NOI18N //$NON-NLS-1$

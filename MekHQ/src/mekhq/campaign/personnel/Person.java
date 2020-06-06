@@ -862,7 +862,9 @@ public class Person implements Serializable, MekHqXmlSerializable {
             case (T_NONE):
                 return true;
             case (T_MECHWARRIOR):
-                return hasSkill(SkillType.S_GUN_MECH) && hasSkill(SkillType.S_PILOT_MECH);
+                return (hasSkill(SkillType.S_GUN_MECH) || hasSkill(SkillType.S_GUN_MECH_L)
+                        || hasSkill(SkillType.S_GUN_MECH_M) || hasSkill(SkillType.S_GUN_MECH_B))
+                        && hasSkill(SkillType.S_PILOT_MECH);
             case (T_GVEE_DRIVER):
                 return hasSkill(SkillType.S_PILOT_GVEE);
             case (T_NVEE_DRIVER):
@@ -1471,7 +1473,7 @@ public class Person implements Serializable, MekHqXmlSerializable {
                         + String.valueOf(getOptionList("::", PilotOptions.EDGE_ADVANTAGES))
                         + "</edge>");
             // For support personnel, write an available edge value
-            if (isSupport() || isEngineer()) {
+            if (isSupport() || isEngineer() || isCombat()) {
                 pw1.println(MekHqXmlUtil.indentStr(indent + 1)
                         + "<edgeAvailable>"
                         + getCurrentEdge()
@@ -3051,9 +3053,12 @@ public class Person implements Serializable, MekHqXmlSerializable {
 
     public boolean canGun(Entity ent) {
         if (ent instanceof LandAirMech) {
-            return hasSkill(SkillType.S_GUN_MECH) && hasSkill(SkillType.S_GUN_AERO);
+            return (hasSkill(SkillType.S_GUN_MECH) || hasSkill(SkillType.S_GUN_MECH_L)
+                    || hasSkill(SkillType.S_GUN_MECH_B) || hasSkill(SkillType.S_GUN_MECH_M))
+                    && hasSkill(SkillType.S_GUN_AERO);
         } else if (ent instanceof Mech) {
-            return hasSkill(SkillType.S_GUN_MECH);
+            return (hasSkill(SkillType.S_GUN_MECH) || hasSkill(SkillType.S_GUN_MECH_L)
+                    || hasSkill(SkillType.S_GUN_MECH_B) || hasSkill(SkillType.S_GUN_MECH_M));
         } else if (ent instanceof Tank) {
             return hasSkill(SkillType.S_GUN_VEE);
         } else if (ent instanceof ConvFighter) {

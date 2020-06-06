@@ -167,6 +167,9 @@ public class PersonnelMarketAtB implements PersonnelMarketMethod {
                 switch (p.getPrimaryRole()) {
                 case Person.T_MECHWARRIOR:
                     adjustSkill(p, SkillType.S_GUN_MECH, gunneryMod);
+                    adjustSkill(p, SkillType.S_GUN_MECH_L, gunneryMod);
+                    adjustSkill(p, SkillType.S_GUN_MECH_M, gunneryMod);
+                    adjustSkill(p, SkillType.S_GUN_MECH_B, gunneryMod);
                     adjustSkill(p, SkillType.S_PILOT_MECH, pilotingMod);
                     break;
                 case Person.T_GVEE_DRIVER:

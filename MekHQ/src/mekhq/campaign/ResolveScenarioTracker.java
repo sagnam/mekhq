@@ -33,6 +33,8 @@ import megamek.common.*;
 import megamek.common.event.GameVictoryEvent;
 import megamek.common.loaders.EntityLoadingException;
 import megamek.common.logging.LogLevel;
+import megamek.common.options.OptionsConstants;
+import megamek.common.options.PilotOptions;
 import mekhq.MekHQ;
 import mekhq.Utilities;
 import mekhq.campaign.event.PersonBattleFinishedEvent;
@@ -539,6 +541,7 @@ public class ResolveScenarioTracker {
                 else if (pilot.getSlotCount() > 1) {
                     for (int slot = 0; slot < pilot.getSlotCount(); slot++) {
                         if (p.getId().toString().equals(pilot.getExternalIdAsString(slot))) {
+                            status.setEdgeRemaining(pilot.getOptions().intOption(OptionsConstants.EDGE));
                             status.setHits(pilot.getHits(slot));
                             break;
                         }
@@ -548,6 +551,7 @@ public class ResolveScenarioTracker {
                 else if(en instanceof Mech
                         || en instanceof Protomech
                         || (en instanceof Aero && !(en instanceof SmallCraft || en instanceof Jumpship))) {
+                    status.setEdgeRemaining(pilot.getOptions().intOption(OptionsConstants.EDGE));
                     status.setHits(pilot.getHits());
                 } else {
                     //we have a multi-crewed vee/Aero/Infantry
@@ -617,6 +621,8 @@ public class ResolveScenarioTracker {
                         }
                         status.setHits(hits);
                     }
+
+                    status.setEdgeRemaining(pilot.getOptions().intOption(OptionsConstants.EDGE));
                 }
                 status.setXP(campaign.getCampaignOptions().getScenarioXP());
                 status.setDeployed(!en.wasNeverDeployed());
@@ -1094,6 +1100,9 @@ public class ResolveScenarioTracker {
             if (campaign.getCampaignOptions().useAdvancedMedical()) {
                 person.diagnose(status.getHits());
             }
+            if (campaign.getCampaignOptions().useEdge()) {
+                person.setCurrentEdge(status.getEdgeRemaining());
+            }
             if (status.toRemove()) {
                 campaign.removePerson(pid, false);
             }
@@ -1374,7 +1383,7 @@ public class ResolveScenarioTracker {
     
     /**
      * This object is used to track the status of a particular personnel. At the present,
-     * we track the person's missing status, hits, and XP
+     * we track the person's missing status, hits, XP, and edge
      * @author Jay Lawson
      *
      */
@@ -1390,6 +1399,7 @@ public class ResolveScenarioTracker {
         private UUID personId;
         private boolean deployed;
         private boolean dead;
+        private int edgeRemaining;
 
         public PersonStatus(String n, String u, int h, UUID id) {
             name = n;
@@ -1403,6 +1413,7 @@ public class ResolveScenarioTracker {
             personId = id;
             deployed = true;
             dead = false;
+            edgeRemaining = -1;
         }
 
         public UUID getId() {
@@ -1491,6 +1502,14 @@ public class ResolveScenarioTracker {
 
         public boolean wasDeployed() {
             return deployed;
+        }
+
+        public int getEdgeRemaining() {
+            return edgeRemaining;
+        }
+
+        public void setEdgeRemaining(int edgeRemaining) {
+            this.edgeRemaining = edgeRemaining;
         }
 
         @Override
