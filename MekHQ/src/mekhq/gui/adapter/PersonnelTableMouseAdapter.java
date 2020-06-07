@@ -99,6 +99,7 @@ public class PersonnelTableMouseAdapter extends MouseInputAdapter implements
     private static final String CMD_ADD_KILL = "ADD_KILL"; //$NON-NLS-1$
     private static final String CMD_BUY_EDGE = "EDGE_BUY"; //$NON-NLS-1$
     private static final String CMD_SET_EDGE = "EDGE_SET"; //$NON-NLS-1$
+    private static final String CMD_SET_REMAINING_EDGE = "EDGE_REMAINING_SET"; //$NON-NLS-1$
     private static final String CMD_SET_XP = "XP_SET"; //$NON-NLS-1$
     private static final String CMD_ADD_1_XP = "XP_ADD_1"; //$NON-NLS-1$
     private static final String CMD_ADD_XP = "XP_ADD"; //$NON-NLS-1$
@@ -967,6 +968,23 @@ public class PersonnelTableMouseAdapter extends MouseInputAdapter implements
                     person.setEdge(i);
                     //Reset currentEdge for support people
                     person.resetCurrentEdge();
+                    gui.getCampaign().personUpdated(person);
+                    MekHQ.triggerEvent(new PersonChangedEvent(person));
+                }
+                break;
+            }
+            case CMD_SET_REMAINING_EDGE:
+            {
+                PopupValueChoiceDialog pvcd = new PopupValueChoiceDialog(
+                        gui.getFrame(), true, resourceMap.getString("edge.text"), selectedPerson.getCurrentEdge(), 0, //$NON-NLS-1$
+                        10);
+                pvcd.setVisible(true);
+                if (pvcd.getValue() < 0) {
+                    return;
+                }
+                int i = pvcd.getValue();
+                for (Person person : people) {
+                    person.setCurrentEdge(i);
                     gui.getCampaign().personUpdated(person);
                     MekHQ.triggerEvent(new PersonChangedEvent(person));
                 }
@@ -2571,6 +2589,11 @@ public class PersonnelTableMouseAdapter extends MouseInputAdapter implements
             if (gui.getCampaign().getCampaignOptions().useEdge()) {
                 menuItem = new JMenuItem(resourceMap.getString("setEdge.text")); //$NON-NLS-1$
                 menuItem.setActionCommand(CMD_SET_EDGE);
+                menuItem.addActionListener(this);
+                menuItem.setEnabled(gui.getCampaign().isGM());
+                menu.add(menuItem);
+                menuItem = new JMenuItem("Set Remaining Edge"); //$NON-NLS-1$
+                menuItem.setActionCommand(CMD_SET_REMAINING_EDGE);
                 menuItem.addActionListener(this);
                 menuItem.setEnabled(gui.getCampaign().isGM());
                 menu.add(menuItem);
