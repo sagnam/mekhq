@@ -33,9 +33,9 @@ ext {
     hqBranchTag = hqBranch.equals('master')? '' : '-' + hqBranch
     
     // Allows setting a dependency on a different MM branch.
-    mmBranch = 'stable'
+    mmBranch = '0.46.1-sagnam'
     mmBranchTag = mmBranch.equals('master')? '' : '-' + mmBranch
-    mmlBranch = 'stable'
+    mmlBranch = '0.46.1-sagnam'
     mmlBranchTag = mmlBranch.equals('master')? '' : '-' + mmlBranch
     
     mmDir = "${rootDir}/../megamek"
