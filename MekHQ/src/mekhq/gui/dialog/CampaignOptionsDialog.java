@@ -2646,6 +2646,16 @@ public class CampaignOptionsDialog extends javax.swing.JDialog {
         SkillType type;
         JLabel lblSkill;
         for (String skillName : SkillType.getSkillList()) {
+            if (campaign.getGameOptions().booleanOption(OptionsConstants.RPG_RPG_GUNNERY)) {
+                if (SkillType.isSingleGunnery(skillName)) {
+                    continue;
+                }
+            } else {
+                if (SkillType.isSpecificRPGGunnery(skillName)) {
+                    continue;
+                }
+            }
+
             type = SkillType.getType(skillName);
             skPanel = new JPanel();
             c = new java.awt.GridBagConstraints();
